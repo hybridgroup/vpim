@@ -261,7 +261,7 @@ module Vpim
   end
   
   def Vpim.encode_text(v) #:nodoc:
-    v.to_str.gsub(/([\\,;\n])/) { $1 == "\n" ? "\\n" : "\\"+$1 }
+    v.to_str.gsub(/\r\n/, "\n").gsub(/([\\,;\n])/) { $1 == "\n" ? "\\n" : "\\"+$1 }
   end
 
   # v is an Array of String, or just a single String
