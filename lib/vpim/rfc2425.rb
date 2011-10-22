@@ -82,10 +82,7 @@ module Vpim
   # 
   def Vpim.unfold(card) # :nodoc:
     unfolded = []
-    # Ruby 1.9's String can no longer be iterated with #each, so the following
-    # code, which used to work with String, or Array, or File, or anything else
-    # which produced lines when iterated, now just works with String. Sucky.
-    card.each_line do |line|
+    card.each do |line|
       line.chomp!
       # If it's a continuation line, add it to the last.
       # If it's an empty line, drop it from the input.
@@ -290,7 +287,7 @@ module Vpim
   # quoted-string      = DQUOTE *QSAFE-CHAR DQUOTE
   def Vpim.encode_paramtext(value)
     case value
-    when %r{\A#{Bnf::SAFECHAR}*\z}
+    when Regexp.new("\\A#{Bnf::SAFECHAR}*\\z", nil, 'n')
       value
     else
       raise Vpim::Unencodeable, "paramtext #{value.inspect}"
@@ -299,9 +296,9 @@ module Vpim
 
   def Vpim.encode_paramvalue(value)
     case value
-    when %r{\A#{Bnf::SAFECHAR}*\z}
+    when Regexp.new("\\A#{Bnf::SAFECHAR}*\\z", nil, 'n')
       value
-    when %r{\A#{Bnf::QSAFECHAR}*\z}
+    when Regexp.new("\\A#{Bnf::QSAFECHAR}*\\z", nil, 'n')
       '"' + value + '"'
     else
       raise Vpim::Unencodeable, "param-value #{value.inspect}"
@@ -371,4 +368,3 @@ module Vpim
   end
 
 end
-
